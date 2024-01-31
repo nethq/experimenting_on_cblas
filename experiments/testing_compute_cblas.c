@@ -2,16 +2,18 @@
 #include <stdlib.h>
 #include <time.h>
 #include "../configured_gsl_2.7.1/include/gsl/gsl_cblas.h"
+#include <string.h>
+
 #pragma comment(lib, "../configured_gsl_2.7.1/lib/libgsl.a")
 //Тук ще направя опит за изчисляване на последователно изчисление на матрици, замервайки времето за изпълнение без и с CBLAS
 long measured_time = NULL;
-
+int val=100;
 void measureTime(){
     if (measured_time == NULL){
         measured_time = clock();
     } else {
         measured_time = clock() - measured_time;
-        printf("Time measured: %ld\n", measured_time);
+        printf("%ld,", measured_time);
         measured_time = NULL;
     }
 }
@@ -26,7 +28,7 @@ void synth_matrix(int n, double *A){
 }
 
 void test1(){
-    int n = 1000;
+    int n = val;
     double *A = (double *)malloc(n*n*sizeof(double));
     double *B = (double *)malloc(n*n*sizeof(double));
     double *C = (double *)malloc(n*n*sizeof(double));
@@ -51,7 +53,7 @@ void test1(){
 }
 
 void test2_through_cblas(){
-    int n = 1000;
+    int n = val;
     double *A = (double *)malloc(n*n*sizeof(double));
     double *B = (double *)malloc(n*n*sizeof(double));
     double *C = (double *)malloc(n*n*sizeof(double));
@@ -66,8 +68,12 @@ void test2_through_cblas(){
     free(C);
 }
 
-main(){
+main(int argc, char **argv){
+    if (argc > 1){
+        val = atoi(argv[1]);
+    }
     test1();
     test2_through_cblas();   
-    return 0;
+	printf("%d\n",val);
+return 0;
 }
